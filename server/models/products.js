@@ -1,23 +1,23 @@
-const fs = require("fs");
-const path = require("path");
-const util = require("util");
+const mongoose = require("mongoose");
 
-const readFile = util.promisify(fs.readFile);
+const productSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  sku: { type: String, required: true },
+  price: { type: Number, required: true },
+  discountPrice: Number,
+  description: { type: String, required: true },
+  thumbnail: { type: String, required: true },
+  image: { type: String, required: true },
+});
 
-const readProducts = async () => {
-  const productsFile = path.join(__dirname, "products.json");
-  const productsJson = await readFile(productsFile);
-  return JSON.parse(productsJson);
-};
+const Product = mongoose.model("Product", productSchema);
 
 const getAllProducts = async () => {
-  const { products } = await readProducts();
-  return products;
+  return await Product.find();
 };
 
 const getProduct = async (sku) => {
-  const { products } = await readProducts();
-  return products.find((product) => product.sku === sku);
+  return await Product.findOne({ sku });
 };
 
 module.exports = { getAllProducts, getProduct };
