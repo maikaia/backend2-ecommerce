@@ -20,4 +20,8 @@ const getProduct = async (sku) => {
   return await Product.findOne({ sku });
 };
 
-module.exports = { getAllProducts, getProduct };
+const createProduct = async (properties) => {
+  return await Product.create(properties);
+};
+
+module.exports = { getAllProducts, getProduct, createProduct };
