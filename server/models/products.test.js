@@ -9,7 +9,9 @@ beforeAll(async () => {
 });
 
 afterEach(async () => {
-  await mongoose.connection.dropDatabase();
+  for (const collection of Object.values(mongoose.connection.collections)) {
+    await collection.deleteMany();
+  }
 });
 
 afterAll(async () => {
