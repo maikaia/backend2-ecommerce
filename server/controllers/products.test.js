@@ -20,6 +20,6 @@ test("POST /products should create a new product", async () => {
     thumbnail: "/foo-thumbnail.jpg",
     image: "/foo.jpg",
   };
-  const response = request.post("/products");
+  const response = await request.post("/products").send(product);
   expect(response.status).toBe(200);
 });
