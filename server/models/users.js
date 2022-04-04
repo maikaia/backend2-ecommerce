@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
@@ -18,4 +19,12 @@ const createUser = async (user) => {
   return await User.create(user);
 };
 
-module.exports = { createUser };
+const login = async (username, password) => {
+  const user = await User.findOne({ username });
+  if (user && (await bcrypt.compare(password, user.password))) {
+    return user;
+  }
+  return null;
+};
+
+module.exports = { createUser, login };
