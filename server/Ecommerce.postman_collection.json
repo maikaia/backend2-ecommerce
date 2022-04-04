@@ -1,0 +1,177 @@
+{
+	"info": {
+		"_postman_id": "350c4da3-c63d-41da-92ae-a51d5dba71c7",
+		"name": "Ecommerce",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get all products",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{APIURL}}/products",
+					"host": [
+						"{{APIURL}}"
+					],
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get single product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"Response code is 200 OK\"] = pm.response.code === 200;",
+							"var product = pm.response.json();",
+							"tests[\"Product has thumbnail\"] = product.thumbnail;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{APIURL}}/products/ABC-123",
+					"host": [
+						"{{APIURL}}"
+					],
+					"path": [
+						"products",
+						"ABC-123"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Sign up",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"Response code is 200 OK\"] = pm.response.code === 200;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"username\": \"{{USERNAME}}\", \"password\": \"{{PASSWORD}}\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{APIURL}}/users",
+					"host": [
+						"{{APIURL}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Log in",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"Response status code should be 200\"] = pm.response.code === 200;",
+							"let token = pm.response.json().token;",
+							"tests[\"Response should contain token\"] = token;",
+							"pm.variables.set(\"token\", token);",
+							"tests[\"Check that token has been set\"] = pm.variables.get(\"token\") === token;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"username\": \"{{USERNAME}}\", \"password\": \"{{PASSWORD}}\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{APIURL}}/users/tokens",
+					"host": [
+						"{{APIURL}}"
+					],
+					"path": [
+						"users",
+						"tokens"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check yourself",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"Response code should be 200 OK\"] = pm.response.code === 200;",
+							"const body = pm.response.json();",
+							"tests[\"Response should contain the correct username\"] = body.username === pm.variables.get(\"USERNAME\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{APIURL}}/users/me",
+					"host": [
+						"{{APIURL}}"
+					],
+					"path": [
+						"users",
+						"me"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
