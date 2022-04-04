@@ -21,4 +21,9 @@ userRoutes.post("/tokens", async (req, res) => {
   }
 });
 
+userRoutes.get("/me", (req, res) => {
+  const { username } = req.user;
+  res.json({ username });
+});
+
 module.exports = userRoutes;

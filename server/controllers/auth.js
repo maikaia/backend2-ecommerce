@@ -10,8 +10,13 @@ const generateToken = (user) => {
   });
 };
 
-// const authUser = (req, _res, next) => {
-//     const authHeader =
-// }
+const authUser = (req, _res, next) => {
+  const authHeader = req.header("Authorization");
+  if (authHeader) {
+    const token = authHeader.split(" ")[1];
+    req.user = jwt.verify(token, JWT_SECRET);
+  }
+  next();
+};
 
-module.exports = { generateToken };
+module.exports = { authUser, generateToken };
