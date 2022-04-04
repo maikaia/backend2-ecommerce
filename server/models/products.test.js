@@ -1,22 +1,8 @@
-const mongoose = require("mongoose");
+const { setupDatabase } = require("../common/test-utils");
 
 const { createProduct, getProduct } = require("./products");
 
-const MONGODB_TEST_URL = "mongodb://127.0.0.1/test-ecommerce";
-
-beforeAll(async () => {
-  await mongoose.connect(MONGODB_TEST_URL);
-});
-
-afterEach(async () => {
-  for (const collection of Object.values(mongoose.connection.collections)) {
-    await collection.deleteMany();
-  }
-});
-
-afterAll(async () => {
-  await mongoose.connection.close();
-});
+setupDatabase();
 
 test("should create product", async () => {
   const product = await createProduct({
@@ -25,7 +11,7 @@ test("should create product", async () => {
     price: 500,
     description: "A test product",
     thumbnail: "/foo-thumbnail.jpg",
-    image: "/foo.jpg"
+    image: "/foo.jpg",
   });
   const fetchedProduct = await getProduct("XYZ-999");
   expect(product.name).toEqual(fetchedProduct.name);
@@ -38,7 +24,7 @@ test("products should be unique", async () => {
     price: 500,
     description: "A test product",
     thumbnail: "/foo-thumbnail.jpg",
-    image: "/foo.jpg"
+    image: "/foo.jpg",
   };
   await createProduct(product);
   await expect(createProduct(product)).rejects.toThrow();
